@@ -378,14 +378,6 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
     "Age preference"
   ];
   const SENSITIVE_PREFS = ["Nationality preference", "Gender preference", "Age preference", "Employment equity"];
-  const BRIEF_CHIPS = [
-    "manages a small team",
-    "weekend shifts",
-    "comfortable with customers",
-    "cash handling",
-    "own transport",
-    "physically active role"
-  ];
   function seedJob(role, location, brief) {
     const r = role.trim() || "Store Manager";
     const b = (brief || "").toLowerCase();
@@ -447,7 +439,7 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
       setJob(null);
       setScreen("select");
     };
-    return /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif", background: C.bg, minHeight: "100vh", color: C.ink } }, /* @__PURE__ */ React.createElement(Shell, null, screen === "select" && /* @__PURE__ */ React.createElement(SelectScreen, { onAI: () => setScreen("intake") }), screen === "intake" && /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif", background: C.bg, minHeight: "100vh", color: C.ink } }, /* @__PURE__ */ React.createElement(Shell, null, screen === "select" && /* @__PURE__ */ React.createElement(SelectScreen, { onAI: () => setScreen("intake") }), screen === "intake" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Stepper, { current: 1 }), /* @__PURE__ */ React.createElement(
       Intake,
       {
         role,
@@ -461,7 +453,42 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
         onBack: () => setScreen("select"),
         onGenerate: startGenerate
       }
-    ), screen === "generating" && /* @__PURE__ */ React.createElement(Generating, null), screen === "ready" && job && /* @__PURE__ */ React.createElement(Ready, { job, setJob, onSubmit: () => setScreen("submitted"), onRestart: () => setScreen("intake") }), screen === "submitted" && /* @__PURE__ */ React.createElement(Submitted, { job, onReset: reset })));
+    )), screen === "generating" && /* @__PURE__ */ React.createElement(Generating, null), screen === "ready" && job && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Stepper, { current: 2, onStep: (n) => {
+      if (n === 1) setScreen("intake");
+    } }), /* @__PURE__ */ React.createElement(Ready, { job, setJob, onNext: () => setScreen("finalreview"), onRestart: () => setScreen("intake") })), screen === "finalreview" && job && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Stepper, { current: 3, onStep: (n) => {
+      if (n === 1) setScreen("intake");
+      if (n === 2) setScreen("ready");
+    } }), /* @__PURE__ */ React.createElement(FinalReview, { job, onBack: () => setScreen("ready"), onSubmit: () => setScreen("submitted") })), screen === "submitted" && /* @__PURE__ */ React.createElement(Submitted, { job, onReset: reset })));
+  }
+  function Stepper({ current, onStep }) {
+    const steps = ["Role details", "Tweak your role", "Review"];
+    return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 940, margin: "0 auto 26px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center" } }, steps.map((label, i) => {
+      const n = i + 1;
+      const done = n < current, active = n === current;
+      const clickable = onStep && n < current;
+      return /* @__PURE__ */ React.createElement(React.Fragment, { key: label }, /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          style: { display: "flex", alignItems: "center", gap: 10, cursor: clickable ? "pointer" : "default" },
+          onClick: () => clickable && onStep(n)
+        },
+        /* @__PURE__ */ React.createElement("span", { style: {
+          width: 30,
+          height: 30,
+          borderRadius: "50%",
+          flexShrink: 0,
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 13,
+          fontWeight: 700,
+          background: done ? C.green : "#fff",
+          color: done ? "#fff" : active ? C.green : C.sub,
+          border: done ? `1px solid ${C.green}` : active ? `2px solid ${C.green}` : `1px solid #cdd6df`
+        } }, done ? "\u2713" : n),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14, fontWeight: active ? 700 : 500, color: active || done ? C.ink : C.sub, whiteSpace: "nowrap" } }, label)
+      ), n < steps.length && /* @__PURE__ */ React.createElement("div", { style: { flex: 1, height: 1, background: "#d7dee6", margin: "0 14px" } }));
+    })));
   }
   function Shell({ children }) {
     const nav = ["Home", "Jobs", "Interview Calendar", "Assessment & Checks Hub", "My Company", "My Profile", "Resources", "Logout"];
@@ -479,7 +506,7 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
     return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 940, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("h2", { style: { textAlign: "center", marginBottom: 4 } }, "Ready to post a new job? Let's get started."), /* @__PURE__ */ React.createElement("p", { style: { textAlign: "center", color: C.sub, marginTop: 0 } }, "Pick how you'd like to build it."), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 18, marginTop: 26 } }, /* @__PURE__ */ React.createElement("div", { style: { border: `2px solid ${C.green}`, borderRadius: 12, padding: 22, background: C.greenTint, position: "relative" } }, /* @__PURE__ */ React.createElement("span", { style: { position: "absolute", top: -12, left: 18, background: C.green, color: "#fff", fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20 } }, "Recommended"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 30, marginBottom: 8 } }, "\u{1F916}"), /* @__PURE__ */ React.createElement("h3", { style: { margin: "6px 0" } }, "AI Job Builder"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, fontSize: 14, minHeight: 66 } }, "Tell us who you're looking for and we'll create the job post for you."), /* @__PURE__ */ React.createElement("button", { style: { ...btn(C.green), width: "100%" }, onClick: onAI }, "Create with AI")), [
       { t: "Company Templates", d: "Start from a job spec your company has set up before." },
       { t: "JOBJACK Templates", d: "Choose from ready-made blueprints for popular roles." }
-    ].map((c) => /* @__PURE__ */ React.createElement("div", { key: c.t, style: { border: `1px solid ${C.line}`, borderRadius: 12, padding: 22, background: "#fff" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 26, marginBottom: 8, color: C.sub } }, "\u25A4"), /* @__PURE__ */ React.createElement("h3", { style: { margin: "6px 0" } }, c.t), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, fontSize: 14, minHeight: 66 } }, c.d), /* @__PURE__ */ React.createElement("button", { style: { ...ghostBtn, width: "100%" } }, "Choose")))), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 22, background: C.blueTint, borderRadius: 8, padding: "12px 16px", fontSize: 13, color: C.blueInk } }, "\u{1F4A1} New to posting jobs? The AI Job Builder is the fastest way to get started."));
+    ].map((c) => /* @__PURE__ */ React.createElement("div", { key: c.t, style: { border: `1px solid ${C.line}`, borderRadius: 12, padding: 22, background: "#fff" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 26, marginBottom: 8, color: C.sub } }, "\u25A4"), /* @__PURE__ */ React.createElement("h3", { style: { margin: "6px 0" } }, c.t), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, fontSize: 14, minHeight: 66 } }, c.d), /* @__PURE__ */ React.createElement("button", { style: { ...ghostBtn, width: "100%" } }, "Choose")))));
   }
   const MOCK_PLACES = [
     "Durbanville, Cape Town, South Africa",
@@ -541,33 +568,27 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
   }
   function Intake({ role, setRole, location, setLocation, locationResolved, setLocationResolved, brief, setBrief, onBack, onGenerate }) {
     const ready = role.trim() && location.trim() && locationResolved && brief.trim();
-    const addChip = (chip) => {
-      if (brief.toLowerCase().includes(chip.toLowerCase())) return;
-      setBrief((brief ? brief.replace(/\s*$/, "").replace(/\.?$/, "") + ", " : "") + chip);
-    };
-    return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 940, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("button", { style: { ...ghostBtn, marginBottom: 18 }, onClick: onBack }, "\u2190 Back"), /* @__PURE__ */ React.createElement(CreditBanner, null), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 } }, /* @__PURE__ */ React.createElement("div", { style: { background: "#fff", border: `1px solid ${C.line}`, borderRadius: 12, padding: 26 } }, /* @__PURE__ */ React.createElement("h2", { style: { marginTop: 0 } }, "Tell us about the role"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, marginTop: 0 } }, "Just the basics. We'll draft the full job post for you."), /* @__PURE__ */ React.createElement(Field, { label: "Role" }, /* @__PURE__ */ React.createElement("input", { style: inp, value: role, onChange: (e) => setRole(e.target.value), placeholder: "e.g. Store Manager" })), /* @__PURE__ */ React.createElement(Field, { label: "Where is the role based?" }, /* @__PURE__ */ React.createElement(LocationField, { value: location, onChange: setLocation, onResolvedChange: setLocationResolved, placeholder: "Start typing a location or store" })), /* @__PURE__ */ React.createElement(Field, { label: "What are you looking for?" }, /* @__PURE__ */ React.createElement(
+    const creditLines = [
+      ["\u{1F9FE}", /* @__PURE__ */ React.createElement(React.Fragment, null, "Posting this job uses ", /* @__PURE__ */ React.createElement("strong", null, CREDITS, " credits"))],
+      ["\u{1F4C5}", /* @__PURE__ */ React.createElement(React.Fragment, null, "Open for applications for ", /* @__PURE__ */ React.createElement("strong", null, "30 days"))],
+      ["\u23F1", /* @__PURE__ */ React.createElement(React.Fragment, null, "You'll have access to the job for ", /* @__PURE__ */ React.createElement("strong", null, "90 days"))]
+    ];
+    return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 940, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("button", { style: { ...ghostBtn, marginBottom: 18 }, onClick: onBack }, "\u2190 Back"), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24, alignItems: "start" } }, /* @__PURE__ */ React.createElement("div", { style: { background: "#fff", border: `1px solid ${C.line}`, borderRadius: 12, padding: 26 } }, /* @__PURE__ */ React.createElement("h2", { style: { marginTop: 0 } }, "Tell us about the role"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, marginTop: 0 } }, "Just the basics. We'll draft the full job post for you."), /* @__PURE__ */ React.createElement(Field, { label: "Role" }, /* @__PURE__ */ React.createElement("input", { style: inp, value: role, onChange: (e) => setRole(e.target.value), placeholder: "e.g. Store Manager" })), /* @__PURE__ */ React.createElement(Field, { label: "Where is the role based?" }, /* @__PURE__ */ React.createElement(LocationField, { value: location, onChange: setLocation, onResolvedChange: setLocationResolved, placeholder: "Start typing a location or store" })), /* @__PURE__ */ React.createElement(Field, { label: "What are you looking for?" }, /* @__PURE__ */ React.createElement(
       "textarea",
       {
-        style: { ...inp, height: 96, resize: "vertical" },
+        style: { ...inp, height: 150, resize: "vertical" },
         maxLength: 500,
         value: brief,
         onChange: (e) => setBrief(e.target.value),
         placeholder: "e.g. Someone with retail experience who can manage a small team, work weekends and is comfortable with customers."
       }
-    ), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "right", fontSize: 12, color: C.sub } }, brief.length, "/500"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 } }, BRIEF_CHIPS.map((chip) => /* @__PURE__ */ React.createElement(
-      "button",
-      {
-        key: chip,
-        onClick: () => addChip(chip),
-        style: { border: `1px solid ${C.line}`, background: "#fff", borderRadius: 20, padding: "5px 12px", fontSize: 12, cursor: "pointer", color: C.sub }
-      },
-      "+ ",
-      chip
-    )))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: C.sub } }, "\u24D8 The more detail you add, the better your draft. We'll flag anything we couldn't work out."), /* @__PURE__ */ React.createElement("button", { style: { ...btn(ready ? C.green : "#b9c4cf"), cursor: ready ? "pointer" : "not-allowed" }, disabled: !ready, onClick: onGenerate }, "Create my job post")), /* @__PURE__ */ React.createElement("div", { style: { background: C.greenTint, borderRadius: 12, padding: 22 } }, /* @__PURE__ */ React.createElement("h4", { style: { marginTop: 0 } }, "What happens next?"), [
-      "We create a draft job spec from your details",
-      "You review, edit, and fill in anything we couldn't infer",
-      "Post when you're happy"
-    ].map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { display: "flex", gap: 12, marginBottom: 16 } }, /* @__PURE__ */ React.createElement("span", { style: { width: 24, height: 24, borderRadius: "50%", background: C.green, color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 } }, i + 1), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14 } }, s))))));
+    ), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "right", fontSize: 12, color: C.sub } }, brief.length, "/500")), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: C.sub } }, "\u24D8 The more detail you add, the better your draft. We'll flag anything we couldn't work out."), /* @__PURE__ */ React.createElement("button", { style: { ...btn(ready ? C.green : "#b9c4cf"), cursor: ready ? "pointer" : "not-allowed" }, disabled: !ready, onClick: onGenerate }, "Create my job post")), /* @__PURE__ */ React.createElement("div", { style: { background: C.greenTint, borderRadius: 12, padding: 24 } }, /* @__PURE__ */ React.createElement("h4", { style: { marginTop: 0, marginBottom: 4, fontSize: 16 } }, "What happens next?"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: C.sub, margin: "0 0 20px", lineHeight: 1.45 } }, "Every draft is built on more than your notes alone."), [
+      "Built around the details you gave us",
+      "Informed by 70,000+ successful JobFIT placements",
+      "Shaped by proven JOBJACK job templates",
+      "Yours to review, edit, and fine-tune",
+      "Posted the moment it feels right"
+    ].map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { display: "flex", gap: 11, marginBottom: 13, alignItems: "flex-start" } }, /* @__PURE__ */ React.createElement("span", { style: { color: C.green, flexShrink: 0, fontSize: 14, lineHeight: "21px", fontWeight: 700 } }, "\u2713"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14, lineHeight: 1.5 } }, s))), /* @__PURE__ */ React.createElement("div", { style: { borderTop: `1px solid #cfe4d6`, margin: "20px 0 16px" } }), creditLines.map(([, t], i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { fontSize: 13, color: C.greenDark, marginBottom: 9, lineHeight: 1.4 } }, t)))));
   }
   function Generating() {
     const steps = [
@@ -603,11 +624,11 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
   function DraftPill({ isDraft }) {
     return isDraft ? /* @__PURE__ */ React.createElement("span", { style: { background: C.violetTint, color: C.violetInk, fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20 } }, "\u2728 AI draft") : /* @__PURE__ */ React.createElement("span", { style: { background: C.greenTint, color: C.greenDark, fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20 } }, "\u2713 Edited");
   }
-  function Ready({ job, setJob, onSubmit, onRestart }) {
+  function Ready({ job, setJob, onNext, onRestart }) {
     const anyCheckOff = job.checks.some((c) => !c.enabled);
     const missing = [!job.salary && "Salary", !job.startDate && "Start date", !job.schedule && "Work schedule"].filter(Boolean);
     const clearDraft = (key) => setJob((j) => ({ ...j, aiDraft: { ...j.aiDraft, [key]: false } }));
-    return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 880, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("h2", { style: { marginBottom: 2 } }, "Your job is ready \u{1F389}"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, marginTop: 0 } }, "We drafted this from your notes. Review each section, edit anything, then post."), /* @__PURE__ */ React.createElement(CreditBanner, null), /* @__PURE__ */ React.createElement("div", { id: "job-details" }, /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 880, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("h2", { style: { marginBottom: 2 } }, "We've created your job"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, marginTop: 0 } }, "We've drafted this from your notes. Review each section, edit where needed."), /* @__PURE__ */ React.createElement(CreditBanner, null), /* @__PURE__ */ React.createElement("div", { id: "job-details" }, /* @__PURE__ */ React.createElement(
       EditableList,
       {
         title: "Job details",
@@ -665,12 +686,17 @@ function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmoun
         style: { marginTop: 3 },
         onChange: () => setJob({ ...job, checks: job.checks.map((x) => x.id === c.id ? { ...x, enabled: !x.enabled } : x) })
       }
-    ), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("strong", null, c.label), c.enabled && /* @__PURE__ */ React.createElement("span", { style: { color: C.green, marginLeft: 8, fontSize: 12 } }, "\u25CF enabled"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: C.sub } }, c.why, ". I confirm I want this active for this job."))))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 26, alignItems: "center" } }, /* @__PURE__ */ React.createElement("button", { style: ghostBtn, onClick: onRestart }, "\u2190 Start over"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 14, alignItems: "center" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, color: C.sub } }, "Uses ", CREDITS, " credits"), /* @__PURE__ */ React.createElement("button", { style: { ...btn(missing.length ? "#b9c4cf" : C.green), cursor: missing.length ? "not-allowed" : "pointer" }, disabled: missing.length > 0, onClick: onSubmit }, "Post job"))), missing.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { textAlign: "right", fontSize: 12, color: C.amberInk, marginTop: 8 } }, "Add ", missing.join(", "), " before posting."));
+    ), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("strong", null, c.label), c.enabled && /* @__PURE__ */ React.createElement("span", { style: { color: C.green, marginLeft: 8, fontSize: 12 } }, "\u25CF enabled"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: C.sub } }, c.why, ". I confirm I want this active for this job."))))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 26, alignItems: "center" } }, /* @__PURE__ */ React.createElement("button", { style: ghostBtn, onClick: onRestart }, "\u2190 Start over"), /* @__PURE__ */ React.createElement("button", { style: { ...btn(missing.length ? "#b9c4cf" : C.green), cursor: missing.length ? "not-allowed" : "pointer" }, disabled: missing.length > 0, onClick: onNext }, "Next: review \u2192")), missing.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { textAlign: "right", fontSize: 12, color: C.amberInk, marginTop: 8 } }, "Add ", missing.join(", "), " before continuing."));
+  }
+  function FinalReview({ job, onBack, onSubmit }) {
+    const salary = job.salary || "Salary to be confirmed";
+    return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 940, margin: "0 auto" } }, /* @__PURE__ */ React.createElement(CreditBanner, null), /* @__PURE__ */ React.createElement("div", { style: { background: "#fff", border: `1px solid ${C.line}`, borderRadius: 12, padding: 26 } }, /* @__PURE__ */ React.createElement("h2", { style: { marginTop: 0 } }, "Review your job post"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub, marginTop: 0 } }, "This is what potential applicants will see. Please review everything carefully. To make changes, go back to the previous step."), /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 460, margin: "20px auto", border: `1px solid ${C.line}`, borderRadius: 12, padding: 22 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 46, height: 46, borderRadius: 10, background: C.navy, color: C.green, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, marginBottom: 14 } }, "JJ"), /* @__PURE__ */ React.createElement("h3", { style: { margin: "0 0 6px" } }, job.role), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: C.sub, marginBottom: 14 } }, "\u{1F4CD} ", job.location || "Location to be confirmed"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 } }, /* @__PURE__ */ React.createElement("span", { style: pill }, job.employmentType), /* @__PURE__ */ React.createElement("span", { style: pill }, salary)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, color: C.sub } }, "\u{1F552} just now")))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 26, alignItems: "center" } }, /* @__PURE__ */ React.createElement("button", { style: ghostBtn, onClick: onBack }, "\u2190 Go back"), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "right" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: C.amberInk, marginBottom: 8 } }, "You need ", CREDITS, " credits to submit this job post."), /* @__PURE__ */ React.createElement("button", { style: btn(C.green), onClick: onSubmit }, "Submit job"))));
   }
   function Submitted({ job, onReset }) {
     return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 560, margin: "80px auto", textAlign: "center", background: "#fff", border: `1px solid ${C.line}`, borderRadius: 12, padding: 40 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 40 } }, "\u2705"), /* @__PURE__ */ React.createElement("h2", null, "Job posted"), /* @__PURE__ */ React.createElement("p", { style: { color: C.sub } }, job.role, job.location ? `, ${job.location},` : "", " is now live and open for applications for 30 days."), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: C.sub } }, job.checks.filter((c) => c.enabled).length, " check(s) enabled. ", CREDITS, " credits used."), /* @__PURE__ */ React.createElement("button", { style: { ...btn(C.green), marginTop: 18 }, onClick: onReset }, "Post another job"));
   }
   const inp = { width: "100%", boxSizing: "border-box", padding: "9px 11px", border: `1px solid ${C.line}`, borderRadius: 6, fontSize: 14, fontFamily: "inherit" };
+  const pill = { background: "#f2f4f7", borderRadius: 6, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: C.ink };
   function Field({ label, children }) {
     return /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 14 } }, /* @__PURE__ */ React.createElement("label", { style: { display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6, textTransform: "capitalize" } }, label), children);
   }
